@@ -1,24 +1,20 @@
-import PIL
-from PIL import Image
-from flask_cors import CORS
-import numpy as np
-import sys
 import os
+import PIL
+import shutil
+import numpy as np
+from PIL import Image, ImageFile
+from flask_cors import CORS
+from flask import Flask, jsonify, request, render_template
+
 from ..ml_code import preprocess_data
 from ..ml_code import embedding_data
 from ..ml_code import train_model
 from ..ml_code import extract_frames
-import base64
-
-
-from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
 CORS(app)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-# print("video")
 
 
 @app.route("/upload_video", methods=["POST"])
@@ -46,7 +42,8 @@ def upload_video():
 
     prediction = train_model.test(emdTestX, trainy)
 
-    os.rmdir(path)
+    shutil.rmtree(path, ignore_errors=True)
+
     os.remove(video_name)
 
     print(prediction)
@@ -61,9 +58,7 @@ def test_face():
     picture = request.files.get("picture")
     picture_name = 'img.jpg'
 
-    path = os.path.join("./frames/test/", picture_name)
-
-    os.remove(path)
+    # path = os.path.join("./frames/test/", picture_name)
 
     picture.save("./frames/test/img.jpg")
 
@@ -75,4 +70,5 @@ def test_face():
     prediction = train_model.test(emdTestX, trainy)
 
     print(prediction)
+    # os.remove(path)
     return "True"

@@ -1,14 +1,16 @@
 from os import listdir
-from mtcnn.mtcnn import MTCNN
-from PIL import Image
+from mtcnn import MTCNN
+from PIL import Image, ImageFile
 import numpy as np
 import os
+import cv2 as cv
 
 
 def extract_face(filename, required_size=(160, 160)):
-    image = Image.open(filename)
-    image = image.convert('RGB')
+    print(filename)
+    image = cv.cvtColor(cv.imread(filename), cv.COLOR_BGR2RGB)
     pixels = np.asarray(image)
+    print(pixels)
 
     detector = MTCNN()
     results = detector.detect_faces(pixels)
@@ -22,6 +24,8 @@ def extract_face(filename, required_size=(160, 160)):
     image = Image.fromarray(face)
     image = image.resize((160, 160))
     face_array = np.asarray(image)
+
+    print(face_array)
 
     return face_array
 
