@@ -58,7 +58,7 @@ def test_face():
     picture = request.files.get("picture")
     picture_name = 'img.jpg'
 
-    # path = os.path.join("./frames/test/", picture_name)
+    path = os.path.join("./frames/test/", picture_name)
 
     picture.save("./frames/test/img.jpg")
 
@@ -70,5 +70,5 @@ def test_face():
     prediction = train_model.test(emdTestX, trainy)
 
     print(prediction)
-    # os.remove(path)
+    os.remove(path)
     return "True"
